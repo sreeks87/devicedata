@@ -1,5 +1,6 @@
 from django.db.models.aggregates import Avg
 from drf_yasg import openapi
+import json
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -26,10 +27,11 @@ class DeviceView(APIView):
     Expects an array of the defined schema
     '''
         serializer=DeviceRequestSerializer(data=request.data,many=True)
-        print("----------------Request--------------")
         if serializer.is_valid():
             serializer.save()
+            print("---------------------------------------")
             print(serializer.data)
+            print("---------------------------------------")
             return Response(serializer.data,status=status.HTTP_201_CREATED)
         else:
             print(str(serializer.errors))
@@ -39,6 +41,7 @@ class DeviceView(APIView):
         '''
     The GET method retuns the aggregated data from a device over a period of 5 mins(default)
     This default aggregate_size can be modified with a query param agg_size
+    
     Accepted query params: 
     device_id (example 23706ac3-88c4-45a4-9ca0-427d7f162cdb)
     customer_id (example 2140c6cf-f513-489c-b49f-a8686582c664)

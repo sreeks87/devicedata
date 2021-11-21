@@ -19,7 +19,7 @@ schema_view = get_schema_view(
 )
 
 urlpatterns=[
-    path('',views.DeviceView.as_view(),name='device'),
+    path('',views.DeviceView.as_view(),name='deviceapi'),
     # path('docs',views.schema_view),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
 ]

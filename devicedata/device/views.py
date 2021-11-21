@@ -1,7 +1,6 @@
 from django.db.models.aggregates import Avg
-from django.db import connection
-from django.shortcuts import render
-from django.utils import timezone
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -9,22 +8,35 @@ from device.models import Device
 from device.serializers import DeviceRequestSerializer
 from device.serializers import DeviceSingleResponseSerializer
 # Create your views here.
+from rest_framework_swagger.views import get_swagger_view
 
 
 class DeviceView(APIView):
-    '''
+    @swagger_auto_schema(request_body=openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        properties={
+            'device_id': openapi.Schema(type=openapi.TYPE_STRING, description='The device ID'),
+            'customer_id': openapi.Schema(type=openapi.TYPE_STRING, description='The customer ID'),
+            'timestamp': openapi.Schema(type=openapi.TYPE_STRING, description='The timestamp of the generated data'),
+            'reading': openapi.Schema(type=openapi.TYPE_STRING, description='The reading from the device'),
+        }))
+    def post(self,request):
+        '''
     The POST method acceps a reading rom a device.
-    Example payload:
-        [
-            {
-                "timestamp": "RFC3339 Datetime string",
-                "reading": float,
-                "device_id": "UUIDv4 string",
-                "customer_id": "UUIDv4 string"
-            },
-        ...
-        ]
+    Expects an array of the defined schema
+    '''
+        serializer=DeviceRequestSerializer(data=request.data,many=True)
+        print("----------------Request--------------")
+        if serializer.is_valid():
+            serializer.save()
+            print(serializer.data)
+            return Response(serializer.data,status=status.HTTP_201_CREATED)
+        else:
+            print(str(serializer.errors))
+            return Response("error occurred :"+str(serializer.errors) ,status=status.HTTP_400_BAD_REQUEST)
 
+    def get(self,request):
+        '''
     The GET method retuns the aggregated data from a device over a period of 5 mins(default)
     This default aggregate_size can be modified with a query param agg_size
     Accepted query params: 
@@ -35,19 +47,8 @@ class DeviceView(APIView):
     agg_size (example 10)
     http://127.0.0.1:8000/device/?device_id=23706ac3-88c4-45a4-9ca0-427d7f162cdb&agg_size=10
     http://127.0.0.1:8000/device/?customer_id=23706ac3-88c4-45a4-9ca0-427d7f162cdb
-    '''
-    def post(self,request):
-        serializer=DeviceRequestSerializer(data=request.data,many=True)
-        print("----------------Request--------------")
-        if serializer.is_valid():
-            serializer.save()
-            print(serializer.data)
-            return Response(serializer.data,status=status.HTTP_201_CREATED)
-        else:
-            print(serializer.errors)
-            return Response("error occurred ",status=status.HTTP_400_BAD_REQUEST)
-        
-    def get(self,request):
+    
+        '''  
         items=Device.objects.all()
         agg_size=5
         if 'customer_id' in request.GET and request.GET['customer_id'] is not None: 

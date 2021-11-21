@@ -4,6 +4,8 @@
 
     http://127.0.0.1:8000/device/
 
+    Docs: http://127.0.0.1:8000/device/swagger/
+
 The POST method acceps a reading from a device.
 
     Example payload:

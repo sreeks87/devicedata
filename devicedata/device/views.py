@@ -12,16 +12,41 @@ from device.serializers import DeviceSingleResponseSerializer
 
 
 class DeviceView(APIView):
-    
+    '''
+    The POST method acceps a reading rom a device.
+    Example payload:
+        [
+            {
+                "timestamp": "RFC3339 Datetime string",
+                "reading": float,
+                "device_id": "UUIDv4 string",
+                "customer_id": "UUIDv4 string"
+            },
+        ...
+        ]
+
+    The GET method retuns the aggregated data from a device over a period of 5 mins(default)
+    This default aggregate_size can be modified with a query param agg_size
+    Accepted query params: 
+    device_id (example 23706ac3-88c4-45a4-9ca0-427d7f162cdb)
+    customer_id (example 2140c6cf-f513-489c-b49f-a8686582c664)
+    start_time (example start_time=2021-11-20T14:25:00Z; defaults to no lower limit if notpresent)
+    end_time (example start_time=2021-11-20T14:25:00Z; defaults to no upper limit if not present)
+    agg_size (example 10)
+    http://127.0.0.1:8000/device/?device_id=23706ac3-88c4-45a4-9ca0-427d7f162cdb&agg_size=10
+    http://127.0.0.1:8000/device/?customer_id=23706ac3-88c4-45a4-9ca0-427d7f162cdb
+    '''
     def post(self,request):
         serializer=DeviceRequestSerializer(data=request.data,many=True)
+        print("----------------Request--------------")
         if serializer.is_valid():
             serializer.save()
+            print(serializer.data)
             return Response(serializer.data,status=status.HTTP_201_CREATED)
         else:
             print(serializer.errors)
             return Response("error occurred ",status=status.HTTP_400_BAD_REQUEST)
-     
+        
     def get(self,request):
         items=Device.objects.all()
         agg_size=5
@@ -33,10 +58,10 @@ class DeviceView(APIView):
             items=items.filter(device_id=dev_id)
         if 'start_time' in request.GET and request.GET['start_time'] is not None:
             start_time=request.GET['start_time']
-            items=items.filter(start_time__gt=start_time)
+            items=items.filter(timestamp__gt=start_time)
         if 'end_time' in request.GET and request.GET['end_time'] is not None:
             end_time=request.GET['end_time']
-            items=items.filter(end_time__lt=end_time)
+            items=items.filter(timestamp__lt=end_time)
         if 'agg_size' in request.GET and request.GET['agg_size'] is not None:
             agg_size = request.GET['agg_size']
         agg_size = int(agg_size)*60

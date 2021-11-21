@@ -10,5 +10,5 @@ from device.models import Device
 
 
 urlpatterns=[
-    path('',views.DeviceView.as_view()),
+    path('',views.DeviceView.as_view(),name='device'),
 ]

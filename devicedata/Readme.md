@@ -125,3 +125,15 @@ Available in the screenshot folder
 
 2. None of the fields can be null.
 
+3. For this requirement - "data should be retrievable by Device and Customer (for all devices related to that customer)"
+
+    An assumption has been made that the device_id or customer_id will be passed as a query param tothe same endpoint. There is no separate endpoint defined for fetching the data for device_id or customer_id.
+
+    Expected url qury parameters:
+
+    ?customer_id=\<uuid customer_id> 
+    
+    or
+
+    ?device_id=\<uuid device_id>
+

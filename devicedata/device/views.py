@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from device.models import Device
 from device.serializers import DeviceRequestSerializer
-from device.serializers import DeviceResponseSerializer
+from device.serializers import DeviceSingleResponseSerializer
 # Create your views here.
 
 
@@ -66,5 +66,8 @@ class DeviceView(APIView):
                 each_data["readings"].append(each_reading.copy())   
             prev_device=i["device_id"]    
 
-        serializer=DeviceResponseSerializer(data)
-        return Response({'data':data},status=status.HTTP_200_OK)
+        serializer=DeviceSingleResponseSerializer(data=data,many=True)
+        if not serializer.is_valid():
+            print(serializer.errors)
+            return Response({'data':serializer.errors},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response({'data':serializer.data},status=status.HTTP_200_OK)

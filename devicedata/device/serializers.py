@@ -11,9 +11,9 @@ class DeviceRequestSerializer(serializers.ModelSerializer):
 
 class ReadingSerializer(serializers.Serializer):
     timestamp=serializers.DateTimeField()
-    reading=serializers.FloatField
+    reading=serializers.FloatField()
 
-class DeviceResponseSerializer(serializers.Serializer):
+class DeviceSingleResponseSerializer(serializers.Serializer):
     device_id=serializers.UUIDField()
     customer_id=serializers.UUIDField()
     readings=ReadingSerializer(many=True)

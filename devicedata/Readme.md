@@ -43,6 +43,10 @@ http://127.0.0.1:8000/device/?device_id=23706ac3-88c4-45a4-9ca0-427d7f162cdb&agg
 http://127.0.0.1:8000/device/?customer_id=23706ac3-88c4-45a4-9ca0-427d7f162cdb
 
 
+### Screenshots
+
+Available in the screenshot folder
+
 ### How to run this app
 
 
@@ -54,14 +58,70 @@ http://127.0.0.1:8000/device/?customer_id=23706ac3-88c4-45a4-9ca0-427d7f162cdb
 
 4. This will install all the required dependencies
 
-    Database connection
+5. Database connection
 
-    The app uses a postgres DB, default schema to work.
+        The app uses a postgres DB, default schema to work.
 
-    Please update the DB configs in the settings.py -> DATABASE part
+        Please update the DB configs in the settings.py -> DATABASE part
 
-5. Run `python manage.py runserver`
+        The DB values could be setup as env variables
 
-6. The web ui can be seen at `http://127.0.0.1:8000/device/`
+6. Run `python manage.py runserver`
+
+7. The web ui can be seen at `http://127.0.0.1:8000/device/`
+
+### Example
+
+    POST http://127.0.0.1:8000/device/
+    [
+        {
+            "timestamp": "2021-11-20T14:25:00Z",
+            "reading": 158.323,
+            "device_id": "1dae7442-a8ac-47d8-83f9-70672cdb0694",
+            "customer_id": "1dae7442-a8ac-47d8-83f9-70672cdb0694"
+        }
+    ]
+
+
+
+    GET http://127.0.0.1:8000/device/
+
+    {
+    "data": [
+        {
+            "device_id": "1dae7442-a8ac-47d8-83f9-70672cdb0694",
+            "customer_id": "1dae7442-a8ac-47d8-83f9-70672cdb0694",
+            "readings": [
+                {
+                    "timestamp": "2021-11-20T14:25:00Z",
+                    "reading": 158.323
+                }
+            ]
+        },
+        {
+            "device_id": "a7986ad6-896b-47d8-9dc7-f1d38fdecb4b",
+            "customer_id": "27d93758-4e25-4919-9a2b-b1ec0b281b65",
+            "readings": [
+                {
+                    "timestamp": "2021-11-21T15:20:00Z",
+                    "reading": 4407.4400000000005
+                },
+                {
+                    "timestamp": "2021-11-21T16:20:00Z",
+                    "reading": 135.56
+                },
+                {
+                    "timestamp": "2021-11-21T17:20:00Z",
+                    "reading": 13.56
+                }
+            ]
+        }
+    ]
+}
 
 ### Assumptions/Enhancements
+
+1. Customer ID and Device ID in the table can be non unique, there will be multiple reading from same devices for same same/different customers.
+
+2. None of the fields can be null.
+

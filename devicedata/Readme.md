@@ -121,7 +121,7 @@ Available in the screenshot folder
     ]
 }
 
-### Assumptions/Enhancements
+### Assumptions
 
 1. Customer ID and Device ID in the table can be non unique, there will be multiple reading from same devices for same same/different customers.
 

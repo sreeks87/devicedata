@@ -52,23 +52,25 @@ Available in the screenshot folder
 
 1. Install python
 
-2. Install Django
+2. run `pip install -r requirements.txt`
 
-3. run `pip install -r requirements.txt`
+3. This will install all the required dependencies
 
-4. This will install all the required dependencies
+4. Make sure Django is installed 
 
-5. Database connection
+5. Install postgres DB
 
-        The app uses a postgres DB, default schema to work.
+6. Database connection
+
+        The app uses a postgres DB, "default" schema to work.
 
         Please update the DB configs in the settings.py -> DATABASE part
 
         The DB values could be setup as env variables
 
-6. Run `python manage.py runserver`
+7. Run `python manage.py runserver`
 
-7. The web ui can be seen at `http://127.0.0.1:8000/device/`
+8. The web ui can be seen at `http://127.0.0.1:8000/device/`
 
 ### Example
 
